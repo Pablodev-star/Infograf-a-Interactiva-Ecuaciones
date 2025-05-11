@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Infografía Interactiva: Ecuaciones de Primer Grado</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(to right, #dbeafe, #f0fdf4);
+      color: #222;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 40px auto;
+      padding: 30px;
+      background: white;
+      border-radius: 20px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+      position: relative;
+    }
+
+    h1 {
+      text-align: center;
+      color: #0f172a;
+      font-size: 2.5em;
+    }
+
+    .boton, #resuelve-bot {
+      background: #3b82f6;
+      color: white;
+      border: none;
+      padding: 15px 20px;
+      font-size: 18px;
+      border-radius: 10px;
+      cursor: pointer;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+      margin: 20px auto;
+      display: block;
+      transition: background 0.3s, transform 0.2s;
+    }
+
+    .boton:hover, #resuelve-bot:hover {
+      background: #2563eb;
+      transform: scale(1.05);
+    }
+
+    .paso {
+      display: none;
+      padding: 20px;
+      margin: 20px 0;
+      background: #e0f2fe;
+      border-left: 6px solid #0284c7;
+      border-radius: 8px;
+      animation: fadeIn 0.3s ease-in-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .footer {
+      margin-top: 40px;
+      text-align: center;
+      font-size: 14px;
+      color: #666;
+    }
+
+    #mensaje-inactivo {
+      opacity: 0;
+      transition: opacity 1s ease;
+      text-align: center;
+      background: #fef3c7;
+      color: #92400e;
+      padding: 10px;
+      border-radius: 8px;
+      margin-bottom: 10px;
+      font-weight: bold;
+    }
+
+    #mensaje-inactivo.mostrar {
+      opacity: 1;
+    }
+
+    #mano {
+      display: none;
+      font-size: 2em;
+      text-align: center;
+      animation: subirBajar 1s infinite;
+      margin-bottom: 20px;
+    }
+
+    @keyframes subirBajar {
+      0% { transform: translateY(0); }
+      50% { transform: translateY(8px); }
+      100% { transform: translateY(0); }
+    }
+
+    #resuelve-zona {
+      display: none;
+      background: #fff7ed;
+      padding: 20px;
+      border: 2px dashed #f97316;
+      margin-top: 10px;
+      border-radius: 10px;
+      position: absolute;
+      top: 70px;
+      right: 20px;
+      width: 280px;
+      z-index: 10;
+    }
+
+    input[type="text"] {
+      padding: 10px;
+      width: 200px;
+      font-size: 16px;
+      margin: 10px 0;
+    }
+
+    #verifica {
+      background: #10b981;
+      color: white;
+    }
+
+    #verifica:hover {
+      background: #059669;
+    }
+
+    #resultado-ejemplo, #resultado-bot {
+      margin-top: 10px;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <button id="resuelve-bot" onclick="toggleBot()">🤖 Resuelve Ecuaciones Bot</button>
+
+  <h1>¿Cómo resolver <em>cualquier</em> ecuación de primer grado?</h1>
+
+  <div id="mensaje-inactivo">Haz clic en cualquier botón para comenzar</div>
+  <div id="mano">👇</div>
+
+  <button class="boton" onclick="togglePaso(0)">Paso 1: Identifica la ecuación</button>
+  <div class="paso" id="paso0">
+    Una ecuación de primer grado tiene esta forma general: <strong>ax + b = c</strong>
+  </div>
+
+  <button class="boton" onclick="togglePaso(1)">Paso 2: Quita el término independiente</button>
+  <div class="paso" id="paso1">
+    Resta o suma el número que no tiene la letra (b).  
+    Ej: 3x + 5 = 14 → 3x = 14 - 5 → 3x = 9
+  </div>
+
+  <button class="boton" onclick="togglePaso(2)">Paso 3: Aísla la incógnita</button>
+  <div class="paso" id="paso2">
+    Divide entre el número que acompaña a la x.  
+    Ej: 3x = 9 → x = 9 / 3 → x = 3
+  </div>
+
+  <button class="boton" onclick="togglePaso(3)">Paso 4: Comprueba el resultado</button>
+  <div class="paso" id="paso3">
+    Sustituye el valor de x en la ecuación original.  
+    3·3 + 5 = 14 → 9 + 5 = 14 ✓
+  </div>
+
+  <button class="boton" onclick="togglePaso(4)">¡Comprueba lo que aprendiste!</button>
+  <div class="paso" id="paso4">
+    <p>Resuelve esta ecuación: <strong>2x + 4 = 10</strong></p>
+    <input type="text" id="respuesta" placeholder="x = ?">
+    <button id="verifica" onclick="comprobar()">Comprobar</button>
+    <div id="resultado-ejemplo"></div>
+  </div>
+
+  <div id="resuelve-zona">
+    <p><strong>Introduce una ecuación (ej: 5x + 10 = 25)</strong></p>
+    <input type="text" id="ecuacion-input" placeholder="ax + b = c">
+    <button onclick="resolverBot()">Resolver</button>
+    <div id="resultado-bot"></div>
+  </div>
+
+  <div class="footer">
+    P. G. · IES Montevil · 1ºC · Matemáticas · 11 mayo 2025
+  </div>
+</div>
+
+<script>
+  let yaToco = false;
+  let inactividad;
+
+  window.onload = () => {
+    inactividad = setTimeout(() => {
+      if (!yaToco) {
+        document.getElementById("mensaje-inactivo").classList.add("mostrar");
+        document.getElementById("mano").style.display = "block";
+      }
+    }, 5000);
+  };
+
+  function togglePaso(n) {
+    yaToco = true;
+    document.getElementById("mensaje-inactivo").classList.remove("mostrar");
+    document.getElementById("mano").style.display = "none";
+    const paso = document.getElementById("paso" + n);
+    paso.style.display = paso.style.display === "block" ? "none" : "block";
+  }
+
+  function comprobar() {
+    const valor = document.getElementById("respuesta").value.replace(/\s+/g, '').toLowerCase();
+    const salida = document.getElementById("resultado-ejemplo");
+    if (valor === "3" || valor === "x=3") {
+      salida.innerHTML = "¡Correcto! x = 3";
+      salida.style.color = "green";
+    } else {
+      salida.innerHTML = "Incorrecto. Debes restar 4 y dividir entre 2. x = (10 - 4) / 2 = 3";
+      salida.style.color = "red";
+    }
+  }
+
+  function toggleBot() {
+    const zona = document.getElementById("resuelve-zona");
+    zona.style.display = zona.style.display === "block" ? "none" : "block";
+  }
+
+  function resolverBot() {
+    const eq = document.getElementById("ecuacion-input").value.replace(/\s+/g, '').toLowerCase();
+    const salida = document.getElementById("resultado-bot");
+
+    const match = eq.match(/^(-?\d*)x([+-]\d+)?=([+-]?\d+)$/);
+    if (!match) {
+      salida.innerHTML = "Formato no válido. Usa algo como 3x+6=15";
+      salida.style.color = "red";
+      return;
+    }
+
+    let a = match[1] === "" || match[1] === "+" ? 1 : match[1] === "-" ? -1 : parseInt(match[1]);
+    let b = match[2] ? parseInt(match[2]) : 0;
+    let c = parseInt(match[3]);
+
+    let paso1 = `Paso 1: Restamos ${b} → ${a}x = ${c - b}`;
+    let paso2 = `Paso 2: Dividimos entre ${a} → x = ${(c - b)} / ${a}`;
+    let resultado = (c - b) / a;
+
+    salida.innerHTML = `${paso1}<br>${paso2}<br><strong>Resultado: x = ${resultado}</strong>`;
+    salida.style.color = "#111";
+  }
+</script>
+
+</body>
+</html>
